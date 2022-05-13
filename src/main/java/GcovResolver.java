@@ -9,24 +9,25 @@ import java.util.Map;
 public class GcovResolver {
     public String PATH = "";
     public Map<Integer, Integer> coverByLine = new LinkedHashMap<>();
-    public String METHOD = "";
+    public String IDENTIFIER = "";
     public String TESTRESULT = ""; // PASS OR FAIL
+    private boolean load = false;
 
     public GcovResolver(String path) {
         PATH = path;
     }
 
-    public GcovResolver(String path, String method) {
+    public GcovResolver(String path, String result) {
         PATH = path;
-        METHOD = method;
+        TESTRESULT = result;
     }
 
-    public void setMethod(String method) {
-        METHOD = method;
+    public void setID(String method) {
+        IDENTIFIER = method;
     }
 
-    public String getMethod() {
-        return METHOD;
+    public String getID() {
+        return IDENTIFIER;
     }
 
     public String getResult() {
@@ -49,6 +50,9 @@ public class GcovResolver {
             String line;
             while((line = reader.readLine()) != null) {
                 if (line.split(":").length >= 3) {
+                    if (line.contains(":Source:")) {
+                        IDENTIFIER = line.substring(line.indexOf(":Source:")+8).trim();
+                    }
                     String cover = line.split(":")[0].trim();
                     int lineNo = Integer.parseInt(line.split(":")[1].trim());
                     if (lineNo > 0) {
@@ -79,5 +83,9 @@ public class GcovResolver {
             System.out.println("[WARN] No coverage for line " + line + " found in " + PATH);
             return -1;
         }
+    }
+
+    public boolean isLoad() {
+        return load;
     }
 }
