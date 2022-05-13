@@ -1,0 +1,68 @@
+        -:    0:Source:/mnt/hwshare/gcov_mysql/mysql_9_dfb4f427442f5fc4112a4847c09e1c51e420077c_pre/include/mysql/components/services/mysql_socket_bits.h
+        -:    0:Graph:viosocket.cc.gcno
+        -:    0:Data:viosocket.cc.gcda
+        -:    0:Runs:4
+        -:    0:Programs:2
+        -:    1:#ifndef COMPONENTS_SERVICES_MYSQL_SOCKET_BITS_H
+        -:    2:#define COMPONENTS_SERVICES_MYSQL_SOCKET_BITS_H
+        -:    3:
+        -:    4:/* Copyright (c) 2010, 2021, Oracle and/or its affiliates.
+        -:    5:
+        -:    6:   This program is free software; you can redistribute it and/or modify
+        -:    7:   it under the terms of the GNU General Public License, version 2.0,
+        -:    8:   as published by the Free Software Foundation.
+        -:    9:
+        -:   10:   This program is also distributed with certain software (including
+        -:   11:   but not limited to OpenSSL) that is licensed under separate terms,
+        -:   12:   as designated in a particular file or component or in included license
+        -:   13:   documentation.  The authors of MySQL hereby grant you an additional
+        -:   14:   permission to link the program and your derivative works with the
+        -:   15:   separately licensed software that they have included with MySQL.
+        -:   16:
+        -:   17:   This program is distributed in the hope that it will be useful,
+        -:   18:   but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   19:   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   20:   GNU General Public License, version 2.0, for more details.
+        -:   21:
+        -:   22:   You should have received a copy of the GNU General Public License
+        -:   23:   along with this program; if not, write to the Free Software
+        -:   24:   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+        -:   25:*/
+        -:   26:
+        -:   27:#include "my_io.h"
+        -:   28:#include "mysql/components/services/my_io_bits.h"
+        -:   29:
+        -:   30:/**
+        -:   31:  An instrumented socket.
+        -:   32:  @c MYSQL_SOCKET is a replacement for @c my_socket.
+        -:   33:*/
+        -:   34:struct MYSQL_SOCKET {
+        -:   35:  /** The real socket descriptor. */
+        -:   36:  my_socket fd;
+        -:   37:
+        -:   38:  /**
+        -:   39:    The instrumentation hook.
+        -:   40:    Note that this hook is not conditionally defined,
+        -:   41:    for binary compatibility of the @c MYSQL_SOCKET interface.
+        -:   42:  */
+        -:   43:  struct PSI_socket *m_psi;
+        -:   44:};
+        -:   45:
+        -:   46:/**
+        -:   47:  @def MYSQL_INVALID_SOCKET
+        -:   48:  MYSQL_SOCKET initial value.
+        -:   49:*/
+        -:   50:// MYSQL_SOCKET MYSQL_INVALID_SOCKET= {INVALID_SOCKET, NULL};
+        -:   51:#define MYSQL_INVALID_SOCKET mysql_socket_invalid()
+        -:   52:
+        -:   53:/**
+        -:   54:  MYSQL_SOCKET helper. Initialize instrumented socket.
+        -:   55:  @sa mysql_socket_getfd
+        -:   56:  @sa mysql_socket_setfd
+        -:   57:*/
+       17:   58:static inline MYSQL_SOCKET mysql_socket_invalid() {
+       17:   59:  MYSQL_SOCKET mysql_socket = {INVALID_SOCKET, nullptr};
+       17:   60:  return mysql_socket;
+        -:   61:}
+        -:   62:
+        -:   63:#endif  // COMPONENTS_SERVICES_MYSQL_SOCKET_BITS_H
